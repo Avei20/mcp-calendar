@@ -16,10 +16,10 @@ COPY . .
 
 # Set environment variables for production
 ENV MCP_TRANSPORT=streamable-http
-ENV PORT=8080
+# ENV PORT=8080
 
-# Expose port for Cloud Run
-EXPOSE 8080
+# # Expose port for Cloud Run
+# EXPOSE 8080
 
 # Run the application using uv
 CMD ["uv", "run", "python", "main.py"]
