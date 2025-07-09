@@ -1,0 +1,13 @@
+services:
+  mcp:
+    build: .
+    environment:
+      GOOGLE_CALENDAR_CLIENT_ID: ""
+      GOOGLE_CALENDAR_CLIENT_SECRET: ""
+      GOOGLE_CALENDAR_REDIRECT_URI: "http://localhost:8080/oauth2callback"
+      DATABASE_URL: ""
+      DEBUG: false
+      MCP_TRANSPORT: streamable-http
+      PORT: 8007
+    ports:
+      - "8007:8007"
