@@ -1,25 +1,20 @@
-FROM python:3.13-slim
+#Reference: https://depot.dev/docs/container-builds/how-to-guides/optimal-dockerfiles/python-uv-dockerfile
+FROM python:3.13-slim-bookworm AS base
 
-# Install uv
-RUN pip install --no-cache-dir uv
-
+FROM base AS builder
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
 WORKDIR /app
+COPY uv.lock pyproject.toml /app/
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-install-project --no-dev
+COPY . /app
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev
 
-# Copy pyproject.toml and README.md for dependency resolution
-COPY pyproject.toml README.md ./
-
-# Install dependencies using uv
-RUN uv pip install --system -e .
-
-# Copy the rest of the application code
-COPY . .
-
-# Set environment variables for production
-ENV MCP_TRANSPORT=streamable-http
-# ENV PORT=8080
-
-# # Expose port for Cloud Run
-# EXPOSE 8080
-
-# Run the application using uv
-CMD ["uv", "run", "python", "main.py"]
+FROM base
+COPY --from=builder /app /app
+ENV PATH="/app/.venv/bin:$PATH"
+WORKDIR /app
+RUN find /app -type f -name "*.py" -not -path "/app/.venv/*" -exec python -m compileall -b {} +
+RUN find /app -type f -name "*.py" -not -path "/app/.venv/*" -exec rm {} +

@@ -9,5 +9,6 @@ services:
       DEBUG: false
       MCP_TRANSPORT: streamable-http
       PORT: 8007
+    command: "python main.pyc"
     ports:
       - "8007:8007"
