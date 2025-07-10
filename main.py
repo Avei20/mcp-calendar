@@ -20,7 +20,7 @@ def main():
     # Run the MCP server
     if transport == "streamable-http":
         # Run as HTTP server for remote connection (Cloud Run)
-        mcp.run(transport="streamable-http", port=port)
+        mcp.run(transport="streamable-http", port=port, host="0.0.0.0")
     else:
         # Run as stdio server for local development
         mcp.run(transport="stdio")
