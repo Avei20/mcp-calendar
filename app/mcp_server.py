@@ -1,4 +1,5 @@
-from mcp.server.fastmcp import FastMCP, Context
+from mcp.server.fastmcp import Context
+from fastmcp import FastMCP
 from typing import Dict, Any, Optional, List
 from sqlalchemy.orm import Session
 
@@ -26,7 +27,7 @@ def get_authorization_url() -> Dict[str, str]:
     auth_uri = get_auth_url()
     return {
         "auth_url": auth_uri,
-        "message": "Please visit this URL to authorize the application."
+        "message": "Please visit this URL to authorize the application.",
     }
 
 
@@ -48,13 +49,10 @@ def exchange_auth_code(code: str, user_id: str = "default") -> Dict[str, Any]:
                 "success": True,
                 "message": "Authorization successful. Token stored.",
                 "expires_in": token_data.get("expires_in"),
-                "user_id": user_id
+                "user_id": user_id,
             }
     except Exception as e:
-        return {
-            "success": False,
-            "message": f"Authorization failed: {str(e)}"
-        }
+        return {"success": False, "message": f"Authorization failed: {str(e)}"}
 
 
 @mcp.tool(title="List Calendars")
@@ -72,10 +70,14 @@ def list_calendars(user_id: str = "default") -> List[Dict[str, Any]]:
         token = token_service.get_token(user_id)
 
         if not token:
-            raise ValueError(f"No token found for user {user_id}. Please authorize first.")
+            raise ValueError(
+                f"No token found for user {user_id}. Please authorize first."
+            )
 
         if token.is_expired:
-            raise ValueError(f"Token for user {user_id} is expired. Please authorize again.")
+            raise ValueError(
+                f"Token for user {user_id} is expired. Please authorize again."
+            )
 
         calendar_service = GoogleCalendarService(token)
         return calendar_service.list_calendars()
@@ -97,10 +99,14 @@ def get_calendar(calendar_id: str, user_id: str = "default") -> Dict[str, Any]:
         token = token_service.get_token(user_id)
 
         if not token:
-            raise ValueError(f"No token found for user {user_id}. Please authorize first.")
+            raise ValueError(
+                f"No token found for user {user_id}. Please authorize first."
+            )
 
         if token.is_expired:
-            raise ValueError(f"Token for user {user_id} is expired. Please authorize again.")
+            raise ValueError(
+                f"Token for user {user_id} is expired. Please authorize again."
+            )
 
         calendar_service = GoogleCalendarService(token)
         return calendar_service.get_calendar(calendar_id)
@@ -111,7 +117,7 @@ def create_calendar(
     summary: str,
     description: Optional[str] = None,
     timezone: Optional[str] = None,
-    user_id: str = "default"
+    user_id: str = "default",
 ) -> Dict[str, Any]:
     """Create a new calendar.
 
@@ -129,16 +135,18 @@ def create_calendar(
         token = token_service.get_token(user_id)
 
         if not token:
-            raise ValueError(f"No token found for user {user_id}. Please authorize first.")
+            raise ValueError(
+                f"No token found for user {user_id}. Please authorize first."
+            )
 
         if token.is_expired:
-            raise ValueError(f"Token for user {user_id} is expired. Please authorize again.")
+            raise ValueError(
+                f"Token for user {user_id} is expired. Please authorize again."
+            )
 
         calendar_service = GoogleCalendarService(token)
         return calendar_service.create_calendar(
-            summary=summary,
-            description=description,
-            timezone=timezone
+            summary=summary, description=description, timezone=timezone
         )
 
 
@@ -148,7 +156,7 @@ def update_calendar(
     summary: Optional[str] = None,
     description: Optional[str] = None,
     timezone: Optional[str] = None,
-    user_id: str = "default"
+    user_id: str = "default",
 ) -> Dict[str, Any]:
     """Update an existing calendar.
 
@@ -167,17 +175,21 @@ def update_calendar(
         token = token_service.get_token(user_id)
 
         if not token:
-            raise ValueError(f"No token found for user {user_id}. Please authorize first.")
+            raise ValueError(
+                f"No token found for user {user_id}. Please authorize first."
+            )
 
         if token.is_expired:
-            raise ValueError(f"Token for user {user_id} is expired. Please authorize again.")
+            raise ValueError(
+                f"Token for user {user_id} is expired. Please authorize again."
+            )
 
         calendar_service = GoogleCalendarService(token)
         return calendar_service.update_calendar(
             calendar_id=calendar_id,
             summary=summary,
             description=description,
-            timezone=timezone
+            timezone=timezone,
         )
 
 
@@ -197,15 +209,19 @@ def delete_calendar(calendar_id: str, user_id: str = "default") -> Dict[str, Any
         token = token_service.get_token(user_id)
 
         if not token:
-            raise ValueError(f"No token found for user {user_id}. Please authorize first.")
+            raise ValueError(
+                f"No token found for user {user_id}. Please authorize first."
+            )
 
         if token.is_expired:
-            raise ValueError(f"Token for user {user_id} is expired. Please authorize again.")
+            raise ValueError(
+                f"Token for user {user_id} is expired. Please authorize again."
+            )
 
         calendar_service = GoogleCalendarService(token)
         calendar_service.delete_calendar(calendar_id)
 
         return {
             "success": True,
-            "message": f"Calendar {calendar_id} deleted successfully."
+            "message": f"Calendar {calendar_id} deleted successfully.",
         }
