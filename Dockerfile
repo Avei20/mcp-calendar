@@ -17,4 +17,4 @@ COPY --from=builder /app /app
 ENV PATH="/app/.venv/bin:$PATH"
 WORKDIR /app
 RUN find /app -type f -name "*.py" -not -path "/app/.venv/*" -exec python -m compileall -b {} +
-RUN find /app -type f -name "*.py" -not -path "/app/.venv/*" -exec rm {} +
+# RUN find /app -type f -name "*.py" -not -path "/app/.venv/*" -exec rm {} +
