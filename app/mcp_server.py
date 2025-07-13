@@ -4,6 +4,7 @@ from typing import Dict, Any, Optional, List
 from sqlalchemy.orm import Session
 
 from app.services.google_calendar import GoogleCalendarService
+from app.utils.auth import get_auth_url
 
 # Create an MCP server
 mcp = FastMCP("Google Calendar MCP")
