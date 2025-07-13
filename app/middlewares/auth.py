@@ -10,7 +10,7 @@ class TokenAuthenticationMiddleware(Middleware):
             token = context.message.get("token")
 
         if not token:
-            raise McpError(ErrorData(code=-32000, message="Missing token in request body"))
+            raise McpError(ErrorData(code=-32000, message="No Token Provided, Please Autheticate"))
 
         # Validate the Google OAuth token
         from app.mcp_server import validate_google_token
