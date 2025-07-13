@@ -1,5 +1,6 @@
 import os
 import uvicorn
+import asyncio
 
 from dotenv import load_dotenv, find_dotenv
 from app.mcp_server import mcp
@@ -18,12 +19,19 @@ def main():
     transport = os.getenv("MCP_TRANSPORT", "streamable-http")
 
     # Run the MCP server
-    if transport == "streamable-http":
-        # Run as HTTP server for remote connection (Cloud Run)
-        mcp.run(transport="streamable-http", port=port, host="0.0.0.0")
-    else:
-        # Run as stdio server for local development
-        mcp.run(transport="stdio")
+    match transport:
+        case "streamable-http" or "http":
+            asyncio.run(
+                # Run as HTTP server for remote connection (Cloud Run)
+                mcp.run_async(transport="http", port=port, host="0.0.0.0")
+            )
+        case "sse":
+            asyncio.run(
+                # Run as SSE server for remote connection (Cloud Run)
+                mcp.run_async(transport="sse", port=port, host="0.0.0.0")
+            )
+        case _:
+            mcp.run(transport="stdio")
 
 
 if __name__ == "__main__":
