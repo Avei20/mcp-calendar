@@ -9,7 +9,7 @@ from app.core.config import get_validated_settings
 from fastapi import FastAPI
 from starlette.requests import Request
 from starlette.responses import PlainTextResponse
-from auth_middleware import TokenAuthenticationMiddleware
+from app.middlewares.auth import TokenAuthenticationMiddleware
 
 
 # Mount MCP server at /mcp using FastAPI
