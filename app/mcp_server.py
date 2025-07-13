@@ -30,6 +30,28 @@ def validate_google_token(token: dict) -> bool:
             return False
     return True
 
+@mcp.tool(title="Exchange Authorization Code")
+def exchange_auth_code(code: str, user_id: str = "default") -> Dict[str, Any]:
+    """Exchange authorization code for access token.
+
+    Args:
+        code: The authorization code from Google OAuth.
+        user_id: User identifier for token storage (default: "default").
+
+    Returns:
+        Token information and status.
+    """
+    try:
+        with get_db() as db:
+            token_data = exchange_code_for_token(code=code, db=db, user_id=user_id)
+            return {
+                "success": True,
+                "message": "Authorization successful. Token stored.",
+                "expires_in": token_data.get("expires_in"),
+                "user_id": user_id,
+            }
+    except Exception as e:
+        return {"success": False, "message": f"Authorization failed: {str(e)}"}
 
 @mcp.tool(title="List Calendars")
 def list_calendars(token: dict) -> List[Dict[str, Any]]:
