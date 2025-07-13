@@ -20,7 +20,7 @@ def main():
 
     # Run the MCP server
     match transport:
-        case "streamable-http" or "http":
+        case "streamable-http" | "http":
             asyncio.run(
                 # Run as HTTP server for remote connection (Cloud Run)
                 mcp.run_async(transport="http", port=port, host="0.0.0.0")
