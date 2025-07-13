@@ -30,6 +30,21 @@ def validate_google_token(token: dict) -> bool:
             return False
     return True
 
+@mcp.resource("auth://url")
+def auth_url() -> str:
+    """Get Google OAuth authorization URL."""
+    return get_auth_url()
+
+
+@mcp.tool(title="Get Authorization URL")
+def get_authorization_url() -> Dict[str, str]:
+    """Get the authorization URL for Google OAuth flow."""
+    auth_uri = get_auth_url()
+    return {
+        "auth_url": auth_uri,
+        "message": "Please visit this URL to authorize the application.",
+    }
+
 @mcp.tool(title="Exchange Authorization Code")
 def exchange_auth_code(code: str, user_id: str = "default") -> Dict[str, Any]:
     """Exchange authorization code for access token.
