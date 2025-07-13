@@ -9,8 +9,11 @@ from app.core.config import get_validated_settings
 from fastapi import FastAPI
 from starlette.requests import Request
 from starlette.responses import PlainTextResponse
+from auth_middleware import TokenAuthenticationMiddleware
+
 
 # Mount MCP server at /mcp using FastAPI
+mcp.add_middleware(TokenAuthenticationMiddleware())
 mcp_app = mcp.http_app(path='/calendar')
 app = FastAPI(lifespan=mcp_app.lifespan)
 app.mount("/mcp", mcp_app)
