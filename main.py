@@ -13,7 +13,7 @@ from app.middlewares.auth import TokenAuthenticationMiddleware
 
 
 # Mount MCP server at /mcp using FastAPI
-mcp.add_middleware(TokenAuthenticationMiddleware())
+# mcp.add_middleware(TokenAuthenticationMiddleware())
 mcp_app = mcp.http_app(path='/calendar')
 app = FastAPI(lifespan=mcp_app.lifespan)
 app.mount("/mcp", mcp_app)
