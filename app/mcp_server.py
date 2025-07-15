@@ -12,6 +12,7 @@ mcp = FastMCP("Google Calendar MCP")
 import logging
 from datetime import datetime
 
+
 def validate_google_token(token: dict) -> bool:
     # Basic validation: check for access_token and expiry
     if not token or "access_token" not in token or "expires_in" not in token:
@@ -26,25 +27,29 @@ def validate_google_token(token: dict) -> bool:
     else:
         # If only 'expires_in' is present, assume token was issued now
         issued_at = token.get("issued_at", datetime.utcnow().timestamp())
-        if datetime.utcnow() > datetime.utcfromtimestamp(issued_at + token["expires_in"]):
+        if datetime.utcnow() > datetime.utcfromtimestamp(
+            issued_at + token["expires_in"]
+        ):
             logging.warning("Token is expired.")
             return False
     return True
 
-@mcp.resource("auth://url")
-def auth_url() -> str:
-    """Get Google OAuth authorization URL."""
-    return get_auth_url()
+
+# @mcp.resource("auth://url")
+# def auth_url() -> str:
+#     """Get Google OAuth authorization URL."""
+#     return get_auth_url()
 
 
-@mcp.tool(title="Get Authorization URL")
-def get_authorization_url() -> Dict[str, str]:
-    """Get the authorization URL for Google OAuth flow."""
-    auth_uri = get_auth_url()
-    return {
-        "auth_url": auth_uri,
-        "message": "Please visit this URL to authorize the application.",
-    }
+# @mcp.tool(title="Get Authorization URL")
+# def get_authorization_url() -> Dict[str, str]:
+#     """Get the authorization URL for Google OAuth flow."""
+#     auth_uri = get_auth_url()
+#     return {
+#         "auth_url": auth_uri,
+#         "message": "Please visit this URL to authorize the application.",
+#     }
+
 
 @mcp.tool(title="Exchange Authorization Code")
 def exchange_auth_code(code: str, user_id: str = "default") -> Dict[str, Any]:
@@ -68,6 +73,7 @@ def exchange_auth_code(code: str, user_id: str = "default") -> Dict[str, Any]:
             }
     except Exception as e:
         return {"success": False, "message": f"Authorization failed: {str(e)}"}
+
 
 @mcp.tool(title="List Calendars")
 def list_calendars(token: dict) -> List[Dict[str, Any]]:
