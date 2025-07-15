@@ -16,7 +16,7 @@ class TokenAuthenticationMiddleware(Middleware):
             token = context.message.get("token")
 
         if not token:
-            raise McpError(ErrorData(code=-32000, message="No Token Provided, Please Autheticate"))
+            raise McpError(ErrorData(code=-32000, message="No Token Provided, Please Authenticate using ADK Auth"))
 
         # Validate the Google OAuth token
         if not validate_google_token(token):
